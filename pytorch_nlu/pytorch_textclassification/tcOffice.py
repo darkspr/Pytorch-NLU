@@ -240,6 +240,8 @@ class Office:
                     self.logger.info("current_mertics: {}".format(round(res['loss'], 5)))
                     # idx_score = res.get("micro", {}).get("f1", 0)  # "macro", "micro", "weighted"
                     tmp = {'micro_avg': res['micro_avg'], 'macro_avg': res['macro_avg'], 'weighted_avg': res['weighted_avg']}
+                    print("current_mertics: {}".format(round(res['loss'], 5)))
+                    print(tmp)
                     for k,v in tmp.items():  # tensorboard日志, 其中抽取中文、数字和英文, 避免一些不支持的符号, 比如说 /\|等特殊字符
                         if type(v) == dict:  # 空格和一些特殊字符tensorboardx.add_scalar不支持
                             k = chinese_extract_extend(k)
@@ -277,6 +279,7 @@ class Office:
 
     def save_model(self):
         """  存储模型  """
+        print('save model')
         if not os.path.exists(self.config.model_save_path):
             os.makedirs(self.config.model_save_path)
         # save config
