@@ -96,7 +96,7 @@ class TextClassification:
                                logger=self.logger)
         path_model = os.path.join(self.config.model_save_path, self.config.model_name)
         if os.path.exists(path_model):
-            self.logger.info(f'导入模型:{path_model})
+            self.logger.info(f'导入模型:{path_model}')
             self.office.load_model()
             
     def train(self):
