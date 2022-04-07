@@ -202,6 +202,7 @@ class Office:
         global_steps = 0
         best_mertics = {}
         best_report = ""
+        print('start train')
         for epochs_i in range(self.config.epochs):  # epoch
             self.model.train()  # train-type
             self.logger.info(f'best_mertics:{best_mertics}')
