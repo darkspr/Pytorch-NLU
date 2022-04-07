@@ -94,6 +94,9 @@ class TextClassification:
                                tet_corpus=self.tet_data,
                                config=self.config,
                                logger=self.logger)
+        path_model = os.path.join(self.config.model_save_path, self.config.model_name)
+        if os.path.exists(path_model):
+            self.office.load_model()
         self.office.train_model()
 
     def eval(self):
