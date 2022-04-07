@@ -202,9 +202,10 @@ class Office:
         global_steps = 0
         best_mertics = {}
         best_report = ""
-        for epochs_i in trange(self.config.epochs, desc="epoch"):  # epoch
+        for epochs_i in range(self.config.epochs):  # epoch
             self.model.train()  # train-type
-            for idx, batch_data in enumerate(tqdm(data_loader, desc="step")):  # step
+            self.logger.info(f'best_mertics:{best_mertics}')
+            for idx, batch_data in enumerate(data_loader):  # step
                 # 数据与模型
                 batch_data = [bd.to(self.device) for bd in batch_data]  # device
                 inputs = {"attention_mask": batch_data[1],
@@ -234,10 +235,11 @@ class Office:
                         or (epochs_i+1 == self.config.epochs and idx+1 == len(data_loader)):
                     res, report = self.evaluate("dev")
                     self.logger.info("epoch_global: {}, step_global: {}, step: {}".format(epochs_i, global_steps, idx))
-                    self.logger.info("best_report\n" + best_report)
-                    self.logger.info("current_mertics: {}".format(res))
+                    #self.logger.info("best_report\n" + best_report)
+                    self.logger.info("current_mertics: {}".format(round(res['loss'], 5)))
                     # idx_score = res.get("micro", {}).get("f1", 0)  # "macro", "micro", "weighted"
-                    for k,v in res.items():  # tensorboard日志, 其中抽取中文、数字和英文, 避免一些不支持的符号, 比如说 /\|等特殊字符
+                    tmp = {'micro_avg': res['micro_avg'], 'macro_avg': res['macro_avg'], 'weighted_avg': res['weighted_avg']}
+                    for k,v in tmp.items():  # tensorboard日志, 其中抽取中文、数字和英文, 避免一些不支持的符号, 比如说 /\|等特殊字符
                         if type(v) == dict:  # 空格和一些特殊字符tensorboardx.add_scalar不支持
                             k = chinese_extract_extend(k)
                             k = k.replace(" ", "")
@@ -259,6 +261,7 @@ class Office:
                     # 早停, 连续stop_epochs指标不增长则自动停止
                     if epochs_store and epochs_i - epochs_store[-1][0] >= self.config.stop_epochs:
                         break
+        self.save_model()
         return global_steps, best_mertics, best_report
 
     def load_model(self):
