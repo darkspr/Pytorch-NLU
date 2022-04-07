@@ -83,8 +83,8 @@ class TextClassification:
         self.tet_data = corpus.preprocess(xs_tet, self.config.l2i, max_len=self.config.max_len, label_sep=self.config.label_sep) if self.config.path_tet else None
         self.logger.info("corpus.preprocess ok!")
 
-    def train(self):
-        """ 训练  """
+    def init_model(self):
+        """ 初始化模型  """
         # 创建模型目录与储存超参信息
         if not os.path.exists(self.config.model_save_path):
             os.makedirs(self.config.model_save_path, exist_ok=True)
@@ -96,7 +96,11 @@ class TextClassification:
                                logger=self.logger)
         path_model = os.path.join(self.config.model_save_path, self.config.model_name)
         if os.path.exists(path_model):
+            self.logger.info(f'导入模型:{path_model})
             self.office.load_model()
+            
+    def train(self):
+        """ 训练  """
         self.office.train_model()
 
     def eval(self):
