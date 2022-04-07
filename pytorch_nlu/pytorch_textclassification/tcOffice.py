@@ -23,6 +23,9 @@ import codecs
 import json
 import os
 
+def json_dumps(data):
+    return json.dumps(data, sort_keys=True, indent=4, separators=(', ', ': '), ensure_ascii=False)
+
 
 class Office:
     def __init__(self, config, train_corpus=None, dev_corpus=None, tet_corpus=None, logger=logger):
@@ -241,7 +244,7 @@ class Office:
                     # idx_score = res.get("micro", {}).get("f1", 0)  # "macro", "micro", "weighted"
                     tmp = {'micro_avg': res['micro_avg'], 'macro_avg': res['macro_avg'], 'weighted_avg': res['weighted_avg']}
                     print("current_mertics: {}".format(round(res['loss'], 5)))
-                    print(tmp)
+                    print(json_dumps(tmp))
                     for k,v in tmp.items():  # tensorboard日志, 其中抽取中文、数字和英文, 避免一些不支持的符号, 比如说 /\|等特殊字符
                         if type(v) == dict:  # 空格和一些特殊字符tensorboardx.add_scalar不支持
                             k = chinese_extract_extend(k)
