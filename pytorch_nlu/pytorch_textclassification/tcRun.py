@@ -95,9 +95,12 @@ class TextClassification:
                                config=self.config,
                                logger=self.logger)
         path_model = os.path.join(self.config.model_save_path, self.config.model_name)
+        print(path_model)
         if os.path.exists(path_model):
-            self.logger.info(f'导入模型:{path_model}')
+            print(f'导入模型:{path_model}')
             self.office.load_model()
+        else:
+            print('no model')
             
     def train(self):
         """ 训练  """
