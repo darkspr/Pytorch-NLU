@@ -209,7 +209,7 @@ class Office:
         for epochs_i in range(self.config.epochs):  # epoch
             self.model.train()  # train-type
             self.logger.info(f'best_mertics:{best_mertics}')
-            for idx, batch_data in enumerate(tqdm(data_loader, desc="step")):  # step
+            for idx, batch_data in enumerate(tqdm(data_loader, desc="step", ncols=80)):  # step
                 # 数据与模型
                 batch_data = [bd.to(self.device) for bd in batch_data]  # device
                 inputs = {"attention_mask": batch_data[1],
@@ -243,8 +243,11 @@ class Office:
                     self.logger.info("current_mertics: {}".format(round(res['loss'], 5)))
                     # idx_score = res.get("micro", {}).get("f1", 0)  # "macro", "micro", "weighted"
                     tmp = {'micro_avg': res['micro_avg'], 'macro_avg': res['macro_avg'], 'weighted_avg': res['weighted_avg']}
-                    print("current_mertics: {}".format(round(res['loss'], 5)))
-                    print(json_dumps(tmp))
+                    print("loss: {}".format(round(res['loss'], 5)))
+                    print('\tf1-score\tprecision\trecall\tsupport')
+                    print(f'micro_avg\t{tmp["micro_avg"]["f1-score"]}\t{tmp["micro_avg"]["precision"]}\t{tmp["micro_avg"][trecall"]}\t{tmp["micro_avg"]["support"]}')
+                    print(f'macro_avg\t{tmp["macro_avg"]["f1-score"]}\t{tmp["macro_avg"]["precision"]}\t{tmp["macro_avg"][trecall"]}\t{tmp["macro_avg"]["support"]}')
+                    print(f'weighted_avg\t{tmp["weighted_avg"]["f1-score"]}\t{tmp["weighted_avg"]["precision"]}\t{tmp["weighted_avg"][trecall"]}\t{tmp["weighted_avg"]["support"]}')
                     for k,v in tmp.items():  # tensorboard日志, 其中抽取中文、数字和英文, 避免一些不支持的符号, 比如说 /\|等特殊字符
                         if type(v) == dict:  # 空格和一些特殊字符tensorboardx.add_scalar不支持
                             k = chinese_extract_extend(k)
