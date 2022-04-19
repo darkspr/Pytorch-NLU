@@ -209,7 +209,7 @@ class Office:
         for epochs_i in range(self.config.epochs):  # epoch
             self.model.train()  # train-type
             self.logger.info(f'best_mertics:{best_mertics}')
-            for idx, batch_data in enumerate(tqdm(data_loader, desc="step", ncols=80)):  # step
+            for idx, batch_data in enumerate(tqdm(data_loader, desc="step")):  # step
                 # 数据与模型
                 batch_data = [bd.to(self.device) for bd in batch_data]  # device
                 inputs = {"attention_mask": batch_data[1],
